@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import certifi
 
 from aiogram import Bot, Dispatcher, F
 
@@ -9,6 +10,8 @@ from db import conn
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
+
+print(certifi.where())
 
 async def main():
   dp.include_router(router)
