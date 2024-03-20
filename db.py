@@ -1,26 +1,37 @@
-import psycopg2
-from config import DATABASE, HOST, PORT , PASS, USER
+# TODO:
+# (DONE) 1) Сделать подключение е бд POSTGRESQL
+# (DONE) 2) Сделать добавление пользователя
 
-async def conn():
-  try:
-    connection = psycopg2.connect(
-        user=USER,
-        password=PASS,
-        host=HOST,
-        port=PORT,
-        database=DATABASE
-    )
+from prisma import Prisma, Client
 
-    cursor = connection.cursor()
-    cursor.execute("SELECT version();")
-    record = cursor.fetchone()
-    print("You are connected to - ", record)
 
-  except (Exception, psycopg2.Error) as error:
-      print("Error while connecting to PostgreSQL", error)
+async def connect():
+    client = Client()
+    try:
+        client.connect()
+        print("Connected to Database")
+        return client
+    except Exception as e:
+        print(e)
 
-  finally:
-      if (connection):
-          cursor.close()
-          connection.close()
-          print("PostgreSQL connection is closed")
+    finally:
+        client.disconnect()
+
+
+async def add_user(chat_id: str, username: str) -> bool:
+    client = Client()
+    try:
+        client.connect()
+        user = client.user.find_unique(where={'chat_id': chat_id})
+
+        if user:
+            print("User already added")
+            return True
+
+        client.user.create(data={'chat_id': chat_id, 'username': username})
+        print(f"Added user {username} to chat {chat_id}")
+
+        return True
+    except Exception as e:
+        print("Error:", e)
+        return False
