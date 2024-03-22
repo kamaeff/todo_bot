@@ -55,7 +55,7 @@ async def data_list(call: CallbackQuery):
         formatted_tasks = []
         
         for task_text, task_status in res:
-            formatted_tasks.append(f"{'<i> 🚫</i>' if task_status == 'inProgress' else '<i> ✅</i>' if task_status == 'Done' else ''} <b>Текст задачи:</b> <i>{task_text}</i>\n\n")
+            formatted_tasks.append(f"{'<i> 🚫</i>' if task_status == 'inProgress' else '<i> ✅</i>' if task_status == 'Done' else ''} <i>{task_text}</i>\n\n")
         
         await call.message.edit_text(f"<b>{call.from_user.first_name}</b>, твой список задач:\n\n{''.join(formatted_tasks)}")
     else:
