@@ -16,16 +16,19 @@ model User {
   id       Int    @id @default(autoincrement())
   chat_id  String @unique
   username String
-  todo     Todo[]
+  user_tag String
+
+  todo Todo[]
 }
 
 model Todo {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  id   Int    @id @default(autoincrement())
-  text String
+  id     Int    @id @default(autoincrement())
+  text   String
+  status String @default("inProgress")
 
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  user   User   @relation(fields: [userId], references: [chat_id])
+  userId String
 }
